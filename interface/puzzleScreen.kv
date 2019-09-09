@@ -1,0 +1,74 @@
+<PButton@Button>:
+	font_size: 20
+	size_hint: (0.2,0.2)
+	background_color: (2.55,.49,.46,1)
+	font_size: '95dp'	
+
+<Blank@Button>:
+	size_hint: (0.2,0.2)
+	background_color: (1,1,1,0.1)
+
+<PuzzleScreen>:
+
+	FloatLayout:
+		PButton:
+			id: 1
+			text: "1" 
+			top_hint: 0.85
+			right_hint: 0.35
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			on_release: root.buttonAction(self)
+		PButton:
+			id: 2
+			text: "2"
+			top_hint:0.85
+			right_hint:0.60
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			on_release: root.buttonAction(self)
+		PButton:
+			id: 3
+			text: "3"
+			top_hint:0.85
+			right_hint:0.85
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			on_release: root.buttonAction(self)
+		PButton:
+			id: 4
+			text: "4"
+			top_hint:0.60
+			right_hint:0.35
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			on_release: root.buttonAction(self)
+		PButton:
+			id: 5
+			text: "5"
+			top_hint:0.60
+			right_hint:0.60
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			on_release: root.buttonAction(self)
+		PButton:
+			id: 6
+			text: "6"
+			top_hint:0.60
+			right_hint:0.85
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			on_release: root.buttonAction(self)
+		PButton:
+			id: 7
+			text: "7"
+			top_hint:0.35
+			right_hint:0.35
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			on_release: root.buttonAction(self)
+		PButton:
+			id: 8
+			text: "8"
+			top_hint:0.35
+			right_hint:0.60
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			on_release: root.buttonAction(self)
+		Blank:
+			id: blank
+			top_hint:0.35
+			right_hint:0.85
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
