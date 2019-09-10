@@ -72,3 +72,11 @@
 			right_hint:0.60
 			pos_hint: {'top':self.top_hint,'right':self.right_hint}
 			on_release: root.buttonAction(self)
+		Button:
+			text: "Undo"
+			size_hint: (0.22,0.10)
+			background_color: (2.55,.49,.46,1)
+			pos_hint: {'top':0.12,'right':0.6}
+			font_size: '25dp'
+			on_press: root.undo()
+

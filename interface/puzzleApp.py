@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from PuzzleScreen import PuzzleScreen
 from kivy.core.window import Window as w
-w.clearcolor = (0,206,209, 0)
+w.clearcolor = (0.1,0.1,0.1, 0)
 
 Builder.load_file('puzzleScreen.kv')
 
