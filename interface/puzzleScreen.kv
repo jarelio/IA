@@ -1,16 +1,21 @@
 <PButton@Button>:
 	font_size: 20
-	size_hint: (0.2,0.2)
+	size_hint: (0.22,0.22)
 	background_color: (2.55,.49,.46,1)
 	font_size: '95dp'	
 
 <Blank@Button>:
-	size_hint: (0.2,0.2)
-	background_color: (1,1,1,0.1)
+	size_hint: (0.22,0.22)
+	background_color: (1,1,1,0)
 
 <PuzzleScreen>:
 
 	FloatLayout:
+		Blank:
+			id: blank
+			top_hint:0.35
+			right_hint:0.85
+			pos_hint: {'top':self.top_hint,'right':self.right_hint}
 		PButton:
 			id: 1
 			text: "1" 
@@ -67,8 +72,3 @@
 			right_hint:0.60
 			pos_hint: {'top':self.top_hint,'right':self.right_hint}
 			on_release: root.buttonAction(self)
-		Blank:
-			id: blank
-			top_hint:0.35
-			right_hint:0.85
-			pos_hint: {'top':self.top_hint,'right':self.right_hint}

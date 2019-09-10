@@ -1,6 +1,5 @@
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.config import Config
 from PuzzleScreen import PuzzleScreen
 from kivy.core.window import Window as w
 w.clearcolor = (0,206,209, 0)
