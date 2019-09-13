@@ -73,12 +73,12 @@ class PuzzleScreen(Screen):
 			pass
 
 	def __encontrarpeca0__(self):
-        for i in range(3):
-            for j in range(3):
-                if (self.value[i][j] == 0):
-                    linha = i
-                    coluna = j
-                    return linha,coluna
+		for i in range(3):
+			for j in range(3):
+				if (self.value[i][j] == 0):
+					linha = i
+					coluna = j
+		return linha,coluna
 				
 	def buttonAction(self,instance):
 		blank = self.ids.blank
