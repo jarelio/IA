@@ -3,7 +3,7 @@ from kivy.animation import Animation
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.config import Config
-from 8puzzlebfs import *
+
 
 Config.set('graphics', 'width', '400')
 Config.set('graphics', 'height', '500')
@@ -71,6 +71,14 @@ class PuzzleScreen(Screen):
 			animation2.start(blank)
 		except Exception as e:
 			pass
+
+	def __encontrarpeca0__(self):
+        for i in range(3):
+            for j in range(3):
+                if (self.value[i][j] == 0):
+                    linha = i
+                    coluna = j
+                    return linha,coluna
 				
 	def buttonAction(self,instance):
 		blank = self.ids.blank
