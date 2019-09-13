@@ -2,7 +2,7 @@ class Resolve():
     #algoritmo bfs do cormen, com a modificacao nas linhas 108 a 112
     #modificacao: ao visitar um no, verificar se ele eh o estado meta, se for,
     #montar a lista_solucao que eh os estados do no meta ate a raiz (percorrendo os pais)
-    def bfs(fila,r,meta):
+    def bfs(self,fila,r,meta):
         lista_solucao = []
         r.cor = 'cinza'
        #fila = Fila(r)

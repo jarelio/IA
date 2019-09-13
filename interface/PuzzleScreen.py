@@ -6,7 +6,7 @@ from kivy.config import Config
 
 import Fila
 import No
-import Resolve
+from Resolve import Resolve
 
 Config.set('graphics', 'width', '400')
 Config.set('graphics', 'height', '500')
@@ -109,7 +109,8 @@ class PuzzleScreen(Screen):
 		#for i in fila.retornafila():
 		#	print(i.retornaValue())
 
-		resolve = Resolve.bfs(fila,no_inicial,meta)
+		resolve = Resolve().bfs(fila,no_inicial,meta)
+		print(resolve)
 		#print(resolve)
 
 			
