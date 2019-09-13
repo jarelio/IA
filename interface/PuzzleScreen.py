@@ -4,6 +4,9 @@ from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.config import Config
 
+import Fila
+import No
+import Resolve
 
 Config.set('graphics', 'width', '400')
 Config.set('graphics', 'height', '500')
@@ -87,14 +90,26 @@ class PuzzleScreen(Screen):
 		right_hint = instance.right_hint
 
 		if self.verifyCollision(instance,blank):
-			
 			top_hintB = blank.top_hint
 			right_hintB = blank.right_hint
 			animation = Animation(top_hint = top_hintB,right_hint = right_hintB, duration = 0.1) 
 			animation2 = Animation(top_hint = top_hint,right_hint = right_hint, duration = 0.1) 
-			animation.start(instance) 
+			animation.start(instance)
 			animation2.start(blank)
 		else:
 			anim = Animation(top_hint = top_hint+.01,duration = 0.05) + Animation(top_hint = top_hint, duration=0.05)+Animation(top_hint = top_hint-.01,duration = 0.05) + Animation(top_hint = top_hint, duration=0.05)
 			anim.start(instance)
+
+	def resolve(self):
+		meta = [[1,2,3],[4,5,6],[7,8,0]]
+		no_inicial = No.No(self.values,None)
+		#print(no_inicial.retornaValue())
+
+		fila = Fila.Fila(no_inicial)
+		#for i in fila.retornafila():
+		#	print(i.retornaValue())
+
+		resolve = Resolve.bfs(fila,no_inicial,meta)
+		#print(resolve)
+
 			
