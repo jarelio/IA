@@ -3,7 +3,7 @@ from kivy.animation import Animation
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.config import Config
-
+import time
 import Fila
 import No
 from Resolve import Resolve
@@ -46,7 +46,7 @@ class PuzzleScreen(Screen):
 		return False
 
 	def undo(self):
-		blank = self.ids.blank
+		blank = self.ids["0"]
 		x0,y0 = self.pos0
 		try:
 			instance,direction = self.steps.pop()
@@ -75,30 +75,34 @@ class PuzzleScreen(Screen):
 		except Exception as e:
 			pass
 
-	def __encontrarpeca0__(self):
+	def __encontrarpeca0__(self,value):
 		for i in range(3):
 			for j in range(3):
-				if (self.value[i][j] == 0):
+				if (value[i][j] == 0):
 					linha = i
 					coluna = j
 		return linha,coluna
 				
 	def buttonAction(self,instance):
-		blank = self.ids.blank
+		blank = self.ids["0"]
 		x,y = instance.pos
 		top_hint = instance.top_hint
 		right_hint = instance.right_hint
 
 		if self.verifyCollision(instance,blank):
-			top_hintB = blank.top_hint
-			right_hintB = blank.right_hint
-			animation = Animation(top_hint = top_hintB,right_hint = right_hintB, duration = 0.1) 
-			animation2 = Animation(top_hint = top_hint,right_hint = right_hint, duration = 0.1) 
-			animation.start(instance)
-			animation2.start(blank)
+			self.__swap__(instance,blank)
 		else:
 			anim = Animation(top_hint = top_hint+.01,duration = 0.05) + Animation(top_hint = top_hint, duration=0.05)+Animation(top_hint = top_hint-.01,duration = 0.05) + Animation(top_hint = top_hint, duration=0.05)
 			anim.start(instance)
+
+	def __swap__(self,widget1,widget2):
+		top1,top2 = widget1.top_hint,widget2.top_hint
+		right1,right2 = widget1.right_hint,widget2.right_hint
+		animation = Animation(top_hint = top2,right_hint = right2, duration = 0.1) 
+		animation2 = Animation(top_hint = top1,right_hint = right1, duration = 0.1) 
+		animation.start(widget1)
+		animation2.start(widget2)
+
 
 	def resolve(self):
 		meta = [[1,2,3],[4,5,6],[7,8,0]]
@@ -110,7 +114,20 @@ class PuzzleScreen(Screen):
 		#	print(i.retornaValue())
 
 		resolve = Resolve().bfs(fila,no_inicial,meta)
-		print(resolve)
-		#print(resolve)
+		resolve.reverse()
+
+		for no in resolve[1:]:
+			blank = self.ids["0"]
+			value = no.value
+
+			linha,coluna = self.__encontrarpeca0__(value)
+			self.pos0 = (linha,coluna)
+			instance = self.ids[str(self.values[linha][coluna])]
+
+			self.__swap__(instance,blank)
+			self.values = value
+		print("Value: ",self.values)
+
+
 
 			
