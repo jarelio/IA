@@ -3,6 +3,8 @@ from kivy.animation import Animation
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.config import Config
+import threading
+import copy
 import time
 import Fila
 import No
@@ -14,11 +16,15 @@ Config.set('graphics', 'resizable', False)
 
 class PuzzleScreen(Screen):
 	def __init__(self,**kwargs):
+		self.animationQueue = []
 		self.steps =[]
 		self.values = [[1,2,3],[4,5,6],[7,8,0]]
 		self.pos0 = (2,2)
+		self.event = threading.Event()
 
 		super(PuzzleScreen,self).__init__(**kwargs)
+
+		
 
 	def verifyCollision(self,instance,blank):
 		pos = blank.pos
@@ -102,9 +108,50 @@ class PuzzleScreen(Screen):
 		animation2 = Animation(top_hint = top1,right_hint = right1, duration = 0.1) 
 		animation.start(widget1)
 		animation2.start(widget2)
+		self.__swapPos__(widget1,widget2)
+
+	def __swapPos__(self,widget1,widget2):
+		x1,y1 = widget1.pos
+		x2,y2 = widget2.pos
+
+		widget1.pos = (x2,y2)
+		widget2.pos = (x1,y1)
+
+	def run_animation(self,*args):
+		if len(self.animationQueue)>0:
+			a,w = self.animationQueue.pop(0)
+			a.bind(on_complete = lambda *args:self.run_animation())
+			a.start(w)
+
+	def __swapThread__(self,widget1,widget2,pos1,pos2,*args):
+		self.event.clear()
+		top1,top2 = pos1["top"],pos2["top"]
+		right1,right2 = pos1["right"],pos2["right"]
+
+		animation = Animation(top_hint = top2,right_hint = right2, duration = 0.1) 
+		animation2 = Animation(top_hint = top1,right_hint = right1, duration = 0.1) 
+	
+		self.animationQueue.append((animation,widget1))
+		self.animationQueue.append((animation2,widget2))
+
+		self.dictPos[widget1.text]["pos"] = pos2
+		self.dictPos["0"]["pos"] = pos1
+		self.__swapPos__(widget1,widget2)
+		self.event.set()
 
 
 	def resolve(self):
+
+		self.dictPos = dict()
+
+		for i in self.ids:
+			wid = self.ids[i]
+			if wid.text == '':
+				self.dictPos["0"] = {"pos":wid.pos_hint}
+			else:
+				self.dictPos[wid.text] = {"pos":wid.pos_hint}
+
+		
 		meta = [[1,2,3],[4,5,6],[7,8,0]]
 		no_inicial = No.No(self.values,None)
 		#print(no_inicial.retornaValue())
@@ -112,22 +159,35 @@ class PuzzleScreen(Screen):
 		fila = Fila.Fila(no_inicial)
 		#for i in fila.retornafila():
 		#	print(i.retornaValue())
+		
 
 		resolve = Resolve().bfs(fila,no_inicial,meta)
 		resolve.reverse()
-
+		
 		for no in resolve[1:]:
 			blank = self.ids["0"]
-			value = no.value
+			newValues = no.value
 
-			linha,coluna = self.__encontrarpeca0__(value)
+			linha,coluna = self.__encontrarpeca0__(newValues)
 			self.pos0 = (linha,coluna)
 			instance = self.ids[str(self.values[linha][coluna])]
+			
+			pos2 = copy.deepcopy(self.dictPos["0"]["pos"])
+			pos1 = copy.deepcopy(self.dictPos[str(self.values[linha][coluna])]["pos"])
 
-			self.__swap__(instance,blank)
-			self.values = value
-		print("Value: ",self.values)
+			anim = self.__swapThread__(instance,blank,pos1,pos2)
+			
+			self.values = newValues
 
+		self.run_animation()
+
+
+
+
+
+	
+
+		
 
 
 			
