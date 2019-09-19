@@ -4,8 +4,6 @@ import random
 import copy
 import math
 
-META = [[1,2,3],[4,5,6],[7,8,0]]
-#resolucao
 
 class Noh:
 	def __init__ (self,estado,nopai,g,h):
@@ -26,6 +24,10 @@ class Noh:
 		return self.estado
 
 class Operacoes:
+	
+	def __init__ (self,meta):
+		self.meta = meta
+
 	def solucionavel(self,lista):
 	#Conta o numero de inversoes para ver se e solucionaval, se tiver numero de inversoo impar nao e solucionavel
 	#pelo fato do incial ser par  
@@ -44,13 +46,15 @@ class Operacoes:
 				return True
 
 	#Gera um estado inicial diferente de META
-	def geraInicial(self,st=META[:]):
+	def geraInicial(self,st=None):
+		if(st == None):
+			st = self.meta[:]
 		lista = [j for i in st for j in i]
 		while True:
 			random.shuffle(lista)
 			#st = [[3,7,2],[8,0,1],[4,5,6]]
 			st = [lista[:3]]+[lista[3:6]]+[lista[6:]]
-			if self.solucionavel(lista) and st!=META: return st
+			if self.solucionavel(lista) and st!=self.meta: return st
 		return 0
 
 	#achar elemento no tabuleiro, por padrao acha o vazio primeiro
@@ -76,7 +80,7 @@ class Operacoes:
 
 	#cria no h = distancia percorrida + estado atual e a meta
 	def criaNo(self,estado,pai,g=0):
-		h = g + self.distanciaQuarteirao(estado,META) #heuristica A* distancia de onde ela ta pra onde ele deve estar
+		h = g + self.distanciaQuarteirao(estado,self.meta) #heuristica A* distancia de onde ela ta pra onde ele deve estar
 		return Noh(estado,pai,g,h)
 
 	#inserir no na fronteira e ordena pelo menor curto total
@@ -124,11 +128,12 @@ class Operacoes:
 	def sucessor(self,no):
 		estado = no.estado
 		pai = no.pai
+'''
 		if pai:
 			estadoPai = pai.estado
 		else:
 			estadoPai = None
-
+'''
 		listaS = []
 		l1 = self.moveAcima(copy.deepcopy(estado))
 		if l1 != estado:
@@ -152,7 +157,7 @@ class Operacoes:
 		borda = [noInicio]
 		while borda:
 			no = borda.pop(0)
-			if no.estado == META:
+			if no.estado == self.meta:
 				sol =[]
 				while True:
 					sol.append(no.estado)
@@ -175,7 +180,8 @@ class Jogo:
 
 	#jogo/main
 	def jogo(self):
-		op = Operacoes()
+		meta = [[3,7,2],[8,0,1],[4,5,6]]
+		op = Operacoes(meta)
 		tempos = []
 		solucionados = []
 		solucoes = []
