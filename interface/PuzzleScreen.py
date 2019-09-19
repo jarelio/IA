@@ -145,7 +145,6 @@ class PuzzleScreen(Screen):
 
 
 	def resolve(self):
-
 		self.dictPos = dict()
 
 		for i in self.ids:
@@ -185,6 +184,7 @@ class PuzzleScreen(Screen):
 			self.values = newValues
 
 		self.run_animation()
+		
 
 
 
