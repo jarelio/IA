@@ -1,6 +1,6 @@
 #fila FIFO para ser usada no algoritmo bfs
 class Fila:
-    def __init__(self,raiz,lista = []):
+    def __init__(self,raiz,lista):
         self.lista = lista
         self.lista.append(raiz)
 

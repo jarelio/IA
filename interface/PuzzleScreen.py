@@ -6,8 +6,8 @@ from kivy.config import Config
 import threading
 import copy
 import time
-import Fila
-import No
+from Fila import Fila
+from No import No
 from Resolve import Resolve
 
 Config.set('graphics', 'width', '400')
@@ -27,12 +27,12 @@ class PuzzleScreen(Screen):
 		
 
 	def verifyCollision(self,instance,blank):
-		pos = blank.pos
-		x,y = instance.pos
+		t,r = blank.pos_hint.values()
+		top,right = instance.pos_hint.values()
 
-		sides = {"up":[x,y+125],"down":[x,y-125],"left":[x-100,y],"right":[x+100,y]}
+		sides = {"up":[top+.25,right],"down":[top-.25,right],"left":[top,right-.25],"right":[top,right+.25]}
 		for i in sides:
-			if sides[i] == pos:
+			if sides[i] == [t,r]:
 				x0,y0 = self.pos0
 				if i == "up":
 					self.values[y0][x0],self.values[y0+1][x0] = self.values[y0+1][x0],0
@@ -88,8 +88,11 @@ class PuzzleScreen(Screen):
 					linha = i
 					coluna = j
 		return linha,coluna
+
+	def __disable__(self,instance,boolean,*args):
+		instance.disabled = boolean
 				
-	def buttonAction(self,instance):
+	def buttonAction(self,instance,*args):
 		blank = self.ids["0"]
 		x,y = instance.pos
 		top_hint = instance.top_hint
@@ -99,6 +102,7 @@ class PuzzleScreen(Screen):
 			self.__swap__(instance,blank)
 		else:
 			anim = Animation(top_hint = top_hint+.01,duration = 0.05) + Animation(top_hint = top_hint, duration=0.05)+Animation(top_hint = top_hint-.01,duration = 0.05) + Animation(top_hint = top_hint, duration=0.05)
+			anim.bind(on_start = lambda *args:self.__disable__(instance,True),on_complete = lambda *args:self.__disable__(instance,False))
 			anim.start(instance)
 
 	def __swap__(self,widget1,widget2):
@@ -153,15 +157,16 @@ class PuzzleScreen(Screen):
 
 		
 		meta = [[1,2,3],[4,5,6],[7,8,0]]
-		no_inicial = No.No(self.values,None)
+		
+		no_inicial = No(self.values,None)
 		#print(no_inicial.retornaValue())
 
-		fila = Fila.Fila(no_inicial)
+		fila = Fila(no_inicial,[])
 		#for i in fila.retornafila():
 		#	print(i.retornaValue())
 		
 
-		resolve = Resolve().bfs(fila,no_inicial,meta)
+		resolve = Resolve(fila,no_inicial,meta).bfs()
 		resolve.reverse()
 		
 		for no in resolve[1:]:
@@ -180,6 +185,8 @@ class PuzzleScreen(Screen):
 			self.values = newValues
 
 		self.run_animation()
+
+
 
 
 

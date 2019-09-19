@@ -7,6 +7,7 @@ class No:
         self.adj = adj
         self.value = value
         self.pai = pai
+        
 
     #funcao para inserir um no na lista da adjacencia
     def __inseriradj__(self,valor):
