@@ -47,12 +47,12 @@ class Operacoes:
 
 	#Gera um estado inicial diferente de META
 	def geraInicial(self,st=None):
+		#return [[3,7,2],[8,0,1],[4,5,6]] #--- teste com tabuleiro escolhido
 		if(st == None):
 			st = self.meta[:]
 		lista = [j for i in st for j in i]
 		while True:
 			random.shuffle(lista)
-			#st = [[3,7,2],[8,0,1],[4,5,6]]
 			st = [lista[:3]]+[lista[3:6]]+[lista[6:]]
 			if self.solucionavel(lista) and st!=self.meta: return st
 		return 0
@@ -127,13 +127,7 @@ class Operacoes:
 
 	def sucessor(self,no):
 		estado = no.estado
-		pai = no.pai
-'''
-		if pai:
-			estadoPai = pai.estado
-		else:
-			estadoPai = None
-'''
+
 		listaS = []
 		l1 = self.moveAcima(copy.deepcopy(estado))
 		if l1 != estado:
@@ -180,7 +174,7 @@ class Jogo:
 
 	#jogo/main
 	def jogo(self):
-		meta = [[3,7,2],[8,0,1],[4,5,6]]
+		meta = [[1,2,3],[4,5,6],[7,8,0]]
 		op = Operacoes(meta)
 		tempos = []
 		solucionados = []
