@@ -13,9 +13,12 @@
 	FloatLayout:
 		Blank:
 			id: 0
+			text: "0"
 			top_hint:0.35
 			right_hint:0.85
 			pos_hint: {'top':self.top_hint,'right':self.right_hint}
+			color: 0.1,0.1,0.1,1
+			
 		PButton:
 			id: 1
 			text: "1" 
@@ -80,11 +83,19 @@
 			font_size: '25dp'
 			on_press: root.undo()
 		Button:
-			id: Resolve
-			text: "Resolve"
-			size_hint: (0.24,0.10)
+			id:bfs
+			text: "BFS"
+			size_hint: (0.22,0.10)
 			background_color: (2.55,.49,.46,1)
-			pos_hint: {'top':0.12,'right':0.9}
+			pos_hint: {'top':0.12,'right':0.85}
 			font_size: '25dp'
-			on_press: root.resolve()
+			on_press: root.resolveBFS()
+		Button:
+			id:A
+			text: "A*"
+			size_hint: (0.22,0.10)
+			background_color: (2.55,.49,.46,1)
+			pos_hint: {'top':0.12,'right':0.35}
+			font_size: '25dp'
+			on_press: root.resolveA()
 

@@ -3,12 +3,12 @@ from kivy.animation import Animation
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.config import Config
-import threading
 import copy
 import time
 from Fila import Fila
 from No import No
 from Resolve import Resolve
+from ia_oo import Runner
 
 Config.set('graphics', 'width', '400')
 Config.set('graphics', 'height', '500')
@@ -20,7 +20,6 @@ class PuzzleScreen(Screen):
 		self.steps =[]
 		self.values = [[1,2,3],[4,5,6],[7,8,0]]
 		self.pos0 = (2,2)
-		self.event = threading.Event()
 
 		super(PuzzleScreen,self).__init__(**kwargs)
 
@@ -128,7 +127,6 @@ class PuzzleScreen(Screen):
 			a.start(w)
 
 	def __swapThread__(self,widget1,widget2,pos1,pos2,*args):
-		self.event.clear()
 		top1,top2 = pos1["top"],pos2["top"]
 		right1,right2 = pos1["right"],pos2["right"]
 
@@ -141,16 +139,21 @@ class PuzzleScreen(Screen):
 		self.dictPos[widget1.text]["pos"] = pos2
 		self.dictPos["0"]["pos"] = pos1
 		self.__swapPos__(widget1,widget2)
-		self.event.set()
+		
 
 
-	def resolve(self):
+	def resolveBFS(self):
+		bfsButton = self.ids["bfs"]
+		bfsButton.disabled = True 
+
 		self.dictPos = dict()
 
 		for i in self.ids:
 			wid = self.ids[i]
 			if wid.text == '':
 				self.dictPos["0"] = {"pos":wid.pos_hint}
+			elif wid.text == "BFS" or wid.text == "A*":
+				pass
 			else:
 				self.dictPos[wid.text] = {"pos":wid.pos_hint}
 
@@ -183,18 +186,43 @@ class PuzzleScreen(Screen):
 			
 			self.values = newValues
 
+		anim = Animation(disabled = False, duration = 0)
+		self.animationQueue.append((anim,bfsButton))
 		self.run_animation()
-		
+
+	def resolveA(self):
+		aButton = self.ids["A"]
+		aButton.disabled = True 
+
+		self.dictPos = dict()
+		for i in self.ids:
+			wid = self.ids[i]
+			if wid.text == '':
+				self.dictPos["0"] = {"pos":wid.pos_hint}
+			elif wid.text == "BFS" or wid.text == "A*":
+				pass
+			else:
+				self.dictPos[wid.text] = {"pos":wid.pos_hint}
 
 
+		solucao = Runner(5000,1,self.values).run().pop()
 
+		for state in solucao[1:]:
+			blank = self.ids["0"]
+			newValues = state
 
-
-
-
-	
-
-		
-
-
+			linha,coluna = self.__encontrarpeca0__(newValues)
+			self.pos0 = (linha,coluna)
+			instance = self.ids[str(self.values[linha][coluna])]
 			
+			pos2 = copy.deepcopy(self.dictPos["0"]["pos"])
+			pos1 = copy.deepcopy(self.dictPos[str(self.values[linha][coluna])]["pos"])
+
+			anim = self.__swapThread__(instance,blank,pos1,pos2)
+			
+			self.values = newValues
+
+		anim = Animation(disabled = False, duration = 0)
+		self.animationQueue.append((anim,aButton))
+		self.run_animation()
+
