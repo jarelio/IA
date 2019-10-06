@@ -76,7 +76,7 @@ class No:
 
 #fila FIFO para ser usada no algoritmo bfs
 class Fila:
-    def __init__(self,raiz,lista = []):
+    def __init__(self,raiz,lista):
         self.lista = lista
         self.lista.append(raiz)
 
@@ -102,7 +102,7 @@ class Fila:
 def bfs(r,meta):
     lista_solucao = []
     r.cor = 'cinza'
-    fila = Fila(r)
+    fila = Fila(r,[])
     while(not(fila.filavazia())):
         u = fila.removefila()
         if(u.value == meta):
@@ -132,26 +132,14 @@ def main():
     lista_solucao.reverse()
     
     #Print animado da solução
-    os.system("clear")
-    print("Solucionar: ")
-    for i in no_inicial.value:
-        print(i)
-    print("-------------------------------\n")
     for i in lista_solucao:
-        z = 0
-        if(z==3):
-            print("\n\n")
-        for j in i.value:
-            print(j)
-            z = z + 1
-        time.sleep(1)    
-        os.system("clear")
-        print("Solucionar: ")
-        for i in no_inicial.value:
-            print(i)
-        print("-------------------------------\n")
-    for i in meta:
-        print(i)
+       print (i.value)
 
-
+    no_inicial2 = No([[1,2,3],[4,5,6],[7,0,8]],None)
+    lista_solucao2 = bfs(no_inicial2,meta)
+    lista_solucao.reverse()
+    
+    print("--------\n")
+    for i in lista_solucao2:
+        print(i.value)
 main()
